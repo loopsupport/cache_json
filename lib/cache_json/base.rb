@@ -13,17 +13,24 @@ module CacheJSON
 
       options = self.class.cache_json_full_options
       cache = Cache.new(args: args, options: options)
-      if cache.cached_results
-        cache.cached_results
-      else
-        results = compute_results(args)
-        cache.cached_results = results
-        JSON.parse(results.to_json) # stringify keys
-      end
+      check_cache(args: args, cache: cache) ||
+        JSON.parse(refresh_cache!(args: args, cache: cache).to_json) # stringify keys
     end
 
     def clear_cache!
       Cache.new(options: self.class.cache_json_full_options).clear_cache!
+    end
+
+    def refresh_cache!(args:, cache: nil)
+      cache ||= Cache.new(args: args, options: self.class.cache_json_full_options)
+      results = compute_results(args)
+      cache.cached_results = results
+      results
+    end
+
+    def check_cache(args:, cache: nil)
+      cache ||= Cache.new(args: args, options: self.class.cache_json_full_options)
+      cache.cached_results
     end
 
     class Cache
