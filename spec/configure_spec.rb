@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
-require 'timecop'
-
 RSpec.describe 'CacheJSON.configure' do
-  let!(:second) { 1.0 / 24 / 60 / 60 }
-
-  before do
-    $redis = MockRedis.new
-  end
-
   context 'time_to_expire' do
     def set_app_default
       CacheJSON.configure do |config|

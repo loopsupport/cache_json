@@ -3,6 +3,7 @@
 require 'bundler/setup'
 require 'cache_json'
 require 'mock_redis'
+require 'timecop'
 
 # Finds the nth prime the most inefficient way possible
 class FindPrimes
@@ -37,6 +38,10 @@ def execute_and_time
   }
 end
 
+def second
+  1.0 / 24 / 60 / 60
+end
+
 def parsed_result(key)
   unparsed_result = $redis.get(key)
   unparsed_result ? JSON.parse(unparsed_result) : nil
@@ -45,6 +50,11 @@ end
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'
+
+  config.before(:each) do
+    $redis = MockRedis.new
+    $redis.flushdb
+  end
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
