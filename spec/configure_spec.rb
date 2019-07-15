@@ -1,15 +1,15 @@
-require "timecop"
+# frozen_string_literal: true
 
-RSpec.describe "CacheJSON.configure" do
+require 'timecop'
 
-  let!(:second){ 1.0/24/60/60 }
+RSpec.describe 'CacheJSON.configure' do
+  let!(:second) { 1.0 / 24 / 60 / 60 }
 
   before do
     $redis = MockRedis.new
   end
 
-  context "time_to_expire" do
-
+  context 'time_to_expire' do
     def set_app_default
       CacheJSON.configure do |config|
         config.time_to_expire = 200
@@ -19,7 +19,7 @@ RSpec.describe "CacheJSON.configure" do
     def set_class_specific
       FindPrimes.class_eval do
         cache_json_options(
-          time_to_expire: 100,
+          time_to_expire: 100
         )
       end
     end
@@ -29,25 +29,24 @@ RSpec.describe "CacheJSON.configure" do
     end
 
     def cache_exists?
-      parsed_result("CacheJSON-FindPrimes-prime_index:100") != nil
+      parsed_result('CacheJSON-FindPrimes-prime_index:100') != nil
     end
 
-
-    context "gem default" do
+    context 'gem default' do
       before do
         set_cache
       end
 
       it do
         expect(cache_exists?).to be(true)
-        Timecop.travel(DateTime.now + 3599.9*second)
+        Timecop.travel(DateTime.now + 3599.9 * second)
         expect(cache_exists?).to be(true)
         sleep 0.1
         expect(cache_exists?).to be(false)
       end
     end
 
-    context "app default" do
+    context 'app default' do
       before do
         set_app_default
         set_cache
@@ -55,14 +54,14 @@ RSpec.describe "CacheJSON.configure" do
 
       it do
         expect(cache_exists?).to be(true)
-        Timecop.travel(DateTime.now + 199.9*second)
+        Timecop.travel(DateTime.now + 199.9 * second)
         expect(cache_exists?).to be(true)
         sleep 0.1
         expect(cache_exists?).to be(false)
       end
     end
 
-    context "class specific" do
+    context 'class specific' do
       before do
         set_app_default
         set_class_specific
@@ -71,11 +70,11 @@ RSpec.describe "CacheJSON.configure" do
 
       it do
         expect(cache_exists?).to be(true)
-        Timecop.travel(DateTime.now + 99.9*second)
+        Timecop.travel(DateTime.now + 99.9 * second)
         expect(cache_exists?).to be(true)
         sleep 0.1
         expect(cache_exists?).to be(false)
       end
     end
-  end 
+  end
 end

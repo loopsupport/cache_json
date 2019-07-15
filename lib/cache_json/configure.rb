@@ -1,5 +1,6 @@
-module CacheJSON
+# frozen_string_literal: true
 
+module CacheJSON
   class Config
     @time_to_expire = 3600 # 1 hour
 
