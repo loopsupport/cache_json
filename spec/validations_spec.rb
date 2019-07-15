@@ -1,7 +1,7 @@
-RSpec.describe "CacheJSON validations" do
+# frozen_string_literal: true
 
-  class InvalidClass
-
+RSpec.describe 'CacheJSON validations' do
+  class BadClass
     include CacheJSON::Base
 
     def compute_results(non_keyword_argument)
@@ -13,7 +13,7 @@ RSpec.describe "CacheJSON validations" do
     $redis = MockRedis.new
   end
 
-  it "does not work without keyword arguments" do
-    expect{InvalidClass.new.results(5)}.to raise_error ArgumentError, "Must use keyword arguments"
+  it 'does not work without keyword arguments' do
+    expect { BadClass.new.results(5) }.to raise_error ArgumentError, 'Must use keyword arguments'
   end
 end

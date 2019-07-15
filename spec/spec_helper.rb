@@ -1,10 +1,11 @@
-require "bundler/setup"
-require "cache_json"
-require "mock_redis"
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'cache_json'
+require 'mock_redis'
 
 # Finds the nth prime the most inefficient way possible
 class FindPrimes
-
   include CacheJSON::Base
 
   def compute_results(prime_index:)
@@ -19,11 +20,11 @@ class FindPrimes
 
   private
 
-    def is_prime?(n)
-      (2..n-1).select do |k|
-        n%k == 0
-      end.length == 0
-    end
+  def is_prime?(index)
+    (2..index - 1).select do |k|
+      index % k == 0
+    end.empty?
+  end
 end
 
 def execute_and_time
@@ -32,7 +33,7 @@ def execute_and_time
   end_time = Time.now
   {
     seconds_elapsed: (end_time - start_time),
-    value: result,
+    value: result
   }
 end
 
@@ -41,10 +42,9 @@ def parsed_result(key)
   unparsed_result ? JSON.parse(unparsed_result) : nil
 end
 
-
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = ".rspec_status"
+  config.example_status_persistence_file_path = '.rspec_status'
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!

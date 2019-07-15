@@ -1,0 +1,14 @@
+Style/GlobalVars:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: true
+  Max: 100
+
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - "spec/**/*"
