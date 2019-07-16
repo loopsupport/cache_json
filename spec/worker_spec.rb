@@ -8,13 +8,14 @@ class Example
       arguments: {
         first: (5..10),
         second: ['one option', 'another option'],
-        third: 'the only option'
+        third: 'the only option',
+        fourth: -> { ['proc result'] }
       }
     }
   )
 
-  def compute_results(first:, second:, third:)
-    first.to_s + second.to_s + third.to_s
+  def compute_results(first:, second:, third:, fourth:)
+    first.to_s + second.to_s + third.to_s + fourth.to_s
   end
 end
 
@@ -22,7 +23,7 @@ RSpec.describe CacheJSON::Worker do
   let!(:expected_keys) do
     (5..10).flat_map do |first|
       ['one option', 'another option'].flat_map do |second|
-        "CacheJSON-Example-first:#{first}-second:#{second}-third:the only option"
+        "CacheJSON-Example-first:#{first}-fourth:proc result-second:#{second}-third:the only option"
       end
     end + ['CacheJSON-Example']
   end
@@ -38,8 +39,13 @@ RSpec.describe CacheJSON::Worker do
   # We check this by setting some keys, waiting a bit,
   # then refreshing and waiting until the older keys expire
   context 'only refreshes missing keys' do
-    let!(:first_key) { 'CacheJSON-Example-first:5-second:another option-third:the only option' }
-    let!(:second_key) { 'CacheJSON-Example-first:10-second:one option-third:the only option' }
+    let!(:first_key) do
+      'CacheJSON-Example-first:5-fourth:proc result-second:' \
+        'another option-third:the only option'
+    end
+    let!(:second_key) do
+      'CacheJSON-Example-first:10-fourth:proc result-second:one option-third:the only option'
+    end
 
     before do
       $redis.del(first_key)

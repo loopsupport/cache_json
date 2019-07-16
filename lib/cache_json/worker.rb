@@ -67,7 +67,9 @@ module CacheJSON
 
     def values_for_key(hsh, key)
       pivot_key_values = hsh[key]
-      if pivot_key_values.is_a?(Range) || pivot_key_values.is_a?(Array)
+      if pivot_key_values.is_a?(Proc)
+        pivot_key_values.call
+      elsif pivot_key_values.is_a?(Range) || pivot_key_values.is_a?(Array)
         pivot_key_values
       else
         [pivot_key_values]
