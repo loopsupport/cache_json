@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'redis', '>= 3.3.5', '< 5'
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'mock_redis', '~> 0.21.0'
-  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop', '~> 0.72'
   spec.add_development_dependency 'sidekiq', '>= 3.0', '< 7'
