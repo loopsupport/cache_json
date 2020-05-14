@@ -1,14 +1,41 @@
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - "spec/**/*"
+
+Layout/LineLength:
+  Enabled: true
+  Max: 100
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
 Style/GlobalVars:
   Enabled: false
 
 Style/Documentation:
   Enabled: false
-
-Metrics/LineLength:
-  Enabled: true
-  Max: 100
-
-Metrics/BlockLength:
-  Enabled: true
-  Exclude:
-    - "spec/**/*"
