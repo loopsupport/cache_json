@@ -23,7 +23,7 @@ module CacheJSON
 
     def refresh_cache!(args:, cache: nil)
       cache ||= Cache.new(args: args, options: self.class.cache_json_full_options)
-      results = compute_results(args)
+      results = compute_results(**args)
       cache.cached_results = results
       results
     end
