@@ -54,6 +54,43 @@ CacheJSON.configure do |config|
 end
 ```
 
+## Automatic refreshing (Sidekiq)
+
+There is a simple Sidekiq job that lets you pre-compute selected classes with specified ranges of arguments. All you have to do is add a `refresh` option:
+
+```ruby
+class ExpensiveJob
+
+  include CacheJSON::Base
+
+
+  cache_json_options(
+    time_to_expire: 1.hour,
+    refresh: {
+      arguments: {
+        first: (5..10),
+        second: ['one option', 'another option'],
+        third: 'the only option',
+        fourth: -> { ['proc result'] }
+      }
+    }
+  )
+  ...
+end
+```
+
+The Sidekiq job will take the Cartesian product of all the argument ranges/arrays (all the combinations).
+
+We leave it to you to schedule the job. If you're using https://github.com/moove-it/sidekiq-scheduler, you can do something like this:
+
+```yml
+cache_json_worker:
+  every: "20s"
+  class: CacheJSON::Worker
+```
+
+Whenever the worker runs, it checks which results have expired, and refreshes only those.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
