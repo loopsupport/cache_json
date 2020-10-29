@@ -8,7 +8,7 @@ module CacheJSON
       base.extend(ClassMethods)
     end
 
-    def results(args)
+    def results(args = {})
       raise ArgumentError, 'Must use keyword arguments' unless args.is_a?(Hash)
 
       options = self.class.cache_json_full_options

@@ -9,7 +9,19 @@ RSpec.describe 'CacheJSON validations' do
     end
   end
 
+  class ClassWithoutArguments
+    include CacheJSON::Base
+
+    def compute_results
+      'result'
+    end
+  end
+
   it 'does not work without keyword arguments' do
     expect { BadClass.new.results(5) }.to raise_error ArgumentError, 'Must use keyword arguments'
+  end
+
+  it 'works if there are no arguments provided' do
+    expect(ClassWithoutArguments.new.results).to eq('result')
   end
 end
