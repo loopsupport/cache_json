@@ -17,6 +17,11 @@ module CacheJSON
         JSON.parse(refresh_cache!(args: args, cache: cache).to_json) # stringify keys
     end
 
+    def cache_expiring_soon?(args:, cache: nil)
+      cache ||= Cache.new(args: args, options: self.class.cache_json_full_options)
+      cache.cache_expiring_soon?
+    end
+
     def clear_cache!
       Cache.new(options: self.class.cache_json_full_options).clear_cache!
     end
@@ -52,6 +57,10 @@ module CacheJSON
 
       def clear_cache!
         adapter.clear_cache!
+      end
+
+      def cache_expiring_soon?
+        adapter.cache_expiring_soon?
       end
 
       def adapter

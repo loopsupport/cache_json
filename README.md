@@ -67,6 +67,7 @@ class ExpensiveJob
   cache_json_options(
     time_to_expire: 1.hour,
     refresh: {
+      buffer: 5.minutes,
       arguments: {
         first: (5..10),
         second: ['one option', 'another option'],
@@ -89,7 +90,7 @@ cache_json_worker:
   class: CacheJSON::Worker
 ```
 
-Whenever the worker runs, it checks which results have expired, and refreshes only those.
+Whenever the worker runs, it checks which results have expired, and refreshes only those. If you pass in the `buffer` option, it will actually refresh keys that are that far away from expiring. In the example above, the worker will refresh the cache 5 minutes before it expires. This is good if you want to avoid cache misses altogether.
 
 ## Development
 

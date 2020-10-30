@@ -31,6 +31,10 @@ module CacheJSON
         $redis.del(class_key)
       end
 
+      def cache_expiring_soon?
+        $redis.ttl(full_key) < options[:refresh][:buffer].to_i
+      end
+
       private
 
       def full_key
