@@ -33,7 +33,7 @@ module CacheJSON
     private
 
     def should_refresh?(klass, args)
-      !klass.new.check_cache(args: args)
+      !klass.new.check_cache(args: args) || klass.new.cache_expiring_soon?(args: args)
     end
 
     class AllPermutations

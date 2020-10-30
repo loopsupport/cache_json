@@ -27,13 +27,14 @@ RSpec.describe CacheJSON::Worker do
       end
     end + ['CacheJSON-Example']
   end
+  let(:relevant_keys) { $redis.keys.select { |k| k.include?('CacheJSON-Example') }.sort }
 
   before do
     CacheJSON::Worker.new.perform
   end
 
   it 'refreshes all the permutations of arguments' do
-    expect($redis.keys.sort).to eq(expected_keys.sort)
+    expect(relevant_keys).to eq(expected_keys.sort)
   end
 
   # We check this by setting some keys, waiting a bit,
@@ -50,13 +51,13 @@ RSpec.describe CacheJSON::Worker do
     before do
       $redis.del(first_key)
       $redis.del(second_key)
-      Timecop.travel(DateTime.now + 1800 * second)
+      Timecop.travel(DateTime.now + 3595 * second)
       CacheJSON::Worker.new.perform
-      Timecop.travel(DateTime.now + 1800 * second)
+      Timecop.travel(DateTime.now + 1000 * second)
     end
 
     it do
-      expect($redis.keys.sort).to eq(['CacheJSON-Example', first_key, second_key].sort)
+      expect(relevant_keys).to eq(['CacheJSON-Example', first_key, second_key].sort)
     end
   end
 end
