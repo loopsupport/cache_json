@@ -18,13 +18,25 @@ module CacheJSON
       end
     end
 
-    def perform(klass: nil, args: {})
+    def perform(serialized_arguments = nil)
+      if serialized_arguments
+        deserialized_arguments = JSON.parse(serialized_arguments)
+        klass = deserialized_arguments["klass"]
+        args = deserialized_arguments["args"] || {}
+      else
+        klass = nil
+        args = {}
+      end
       if klass
         klass.new.refresh_cache!(args: args)
       else
         AllPermutations.new.results.each do |perm|
           if should_refresh?(perm[:klass], perm[:args])
-            CacheJSON::Worker.new.perform(klass: perm[:klass], args: perm[:args])
+            serialized_arguments = {
+              klass: perm[:klass], 
+              args: perm[:args]
+            }.to_json
+            CacheJSON::Worker.perform_async(serialized_arguments)
           end
         end
       end

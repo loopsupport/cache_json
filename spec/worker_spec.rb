@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+
 class Example
   include CacheJSON::Base
   cache_json_options(
@@ -20,6 +21,8 @@ class Example
 end
 
 RSpec.describe CacheJSON::Worker do
+  require "sidekiq/testing"
+  Sidekiq::Testing.inline!
   let!(:expected_keys) do
     (5..10).flat_map do |first|
       ['one option', 'another option'].flat_map do |second|
