@@ -27,6 +27,7 @@ module CacheJSON
       else
         AllPermutations.new.results.each do |perm|
           if should_refresh?(perm[:klass], perm[:args])
+            perm[:klass] = perm[:klass].to_s
             CacheJSON::Worker.perform_async(perm.to_json)
           end
         end
