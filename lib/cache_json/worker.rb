@@ -5,7 +5,6 @@ begin
 rescue LoadError
   nil
 end
-
 module CacheJSON
   class Worker
     if defined?(Sidekiq)
@@ -18,13 +17,17 @@ module CacheJSON
       end
     end
 
-    def perform(klass: nil, args: {})
+    def perform(params="{}")
+      parsed_params = JSON.parse(params)
+      klass = parsed_params["klass"]
+      args = (parsed_params["args"] || {}).transform_keys(&:to_sym)
       if klass
-        klass.new.refresh_cache!(args: args)
+        klass = Object.const_get(klass)
+        klass.new.refresh_cache!(args: args) if should_refresh?(klass, args)
       else
         AllPermutations.new.results.each do |perm|
           if should_refresh?(perm[:klass], perm[:args])
-            CacheJSON::Worker.new.perform(klass: perm[:klass], args: perm[:args])
+            CacheJSON::Worker.perform_async(perm.to_json)
           end
         end
       end

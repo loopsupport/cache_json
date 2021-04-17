@@ -3,7 +3,7 @@
 RSpec.describe CacheJSON::Base do
   # Hopefully these make sense for really fast/slow machines
   let!(:long_time) { 0.05 }
-  let!(:short_time) { 0.001 }
+  let!(:short_time) { 0.002 }
 
   it 'actually computes the value the first time and uses the cache the second time' do
     result = execute_and_time { FindPrimes.new.results(prime_index: 500).last }

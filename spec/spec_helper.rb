@@ -4,6 +4,13 @@ require 'bundler/setup'
 require 'cache_json'
 require 'mock_redis'
 require 'timecop'
+begin
+  require 'sidekiq'
+  require 'sidekiq/testing' 
+  Sidekiq::Testing.inline!
+rescue LoadError
+  nil
+end
 
 # Finds the nth prime the most inefficient way possible
 class FindPrimes
@@ -54,6 +61,14 @@ RSpec.configure do |config|
   config.before(:each) do
     $redis = MockRedis.new
     $redis.flushdb
+
+    redis_conn = proc {
+      $redis
+    }
+
+    Sidekiq.configure_client do |config|
+      config.redis = ConnectionPool.new(size: 5, &redis_conn)
+    end
   end
 
   # Disable RSpec exposing methods globally on `Module` and `main`

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cache_json (1.2.4)
+    cache_json (1.2.5)
       redis (>= 3.3.5, < 5)
 
 GEM
@@ -66,4 +66,4 @@ DEPENDENCIES
   timecop (~> 0.9.1)
 
 BUNDLED WITH
-   2.1.4
+   2.2.3
